@@ -8,7 +8,7 @@ import numpy as np
 filehandle = open('allfonts-paths-from-server', 'r')
 files_list = filehandle.readlines()
 path = 'glyphs_output/'
-excluding_list = ['/usr/share/ghostscript/9.10/Resource/CIDFSubst/DroidSansFallback.ttf', '/usr/share/texlive/texmf-dist/fonts/truetype/public/dejavu/DejaVuSans-BoldOblique.ttf','/usr/share/texlive/texmf-dist/fonts/truetype/public/gentium-tug/GentiumPlus-I.ttf', '/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf']
+excluding_list = ['/usr/share/ghostscript/9.10/Resource/CIDFSubst/DroidSansFallback.ttf', '/usr/share/texlive/texmf-dist/fonts/truetype/public/dejavu/DejaVuSans-BoldOblique.ttf','/usr/share/texlive/texmf-dist/fonts/truetype/public/gentium-tug/GentiumPlus-I.ttf', '/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf','/usr/share/doc/texlive-doc/fonts/cm-unicode/Fontmap.CMU.otf','/usr/share/texlive/texmf-dist/fonts/opentype/public/inconsolata/Inconsolata.otf']
 for j,i in enumerate(files_list):
         i = i.rstrip('\n')
 	if i in excluding_list or "DejaVu" in i:
