@@ -33,7 +33,7 @@ for j,i in enumerate(files_list):
 	#		continue
 		#glyph_decimal_code = unique_unicodes[g.unicode]
                 print("unicode = ",g.unicode)
-                if g.unicode <0:
+                if g.unicode <0 or g.unicode>127:
                     continue
 		intrinsic_glyph_decimal_code = g.unicode
                 list_of_files=[]
