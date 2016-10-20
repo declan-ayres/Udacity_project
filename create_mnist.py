@@ -36,19 +36,17 @@ def create_mnist(input_file, training_data_file_name, training_label_file_name, 
 #		sum1 += int(x[2].rstrip('\n'))
 #		dict_with_class_to_ascii_conversion[x[1]] = str(x[0]).strip()
 #	print sum1
-        biggest_c = -1
         exclude = ['notelementof','sidewaysC','omega','islash','notA','ia','unknown','triangle','right','dc' ,'elementof','funnychr','om','lessthanequalto','noth','plusminus','ge','forwardslash','derivative','delta','lambda']
         incl_list = ['97','98','99','120','121','122','61','45','43','47','42','46','48','49','50','51','52','53','54','55','56','57']
 	for j in input_file_list:
 		j = j.rstrip("\n")
 		a = j.split('-')
-		decimal_code = a[2].split(".")[0]
-                c=0
+                print ("A = ",a)
+		decimal_code = a[-1].split(".")[0]
                 if decimal_code not in incl_list:
+                     print("Skipping decimal = ",decimal_code)
                      continue
 		file_path_list.append("glyphs_output/"+j)
-                if biggest_c<c:
-                    biggest_c = c
 		classifier_list.append(int(decimal_code))
 	training_data_file_name_handle = open(training_data_file_name, 'w')
 	test_data_file_name_handle = open(test_data_file_name, 'w')
@@ -102,7 +100,7 @@ def create_mnist(input_file, training_data_file_name, training_label_file_name, 
 	file_handle.close()
 	
 	label80 = int(.8 * len(classifier_list))
-	label20 = int(.2 * len(classifier_list))
+	label20 = len(classifier_list)-label80
 
         new_classifier_list = []
         for j in classifier_list:
@@ -145,7 +143,7 @@ def create_mnist(input_file, training_data_file_name, training_label_file_name, 
         cf = open('config.tensorflow.json','w+')
         cf.write('{\n')
         cf.write('    "tensorflow":{\n')
-        cf.write('        "no_classes":'+str(biggest_c)+"\n")
+        cf.write('        "no_classes":'+str(len(incl_list))+"\n")
         cf.write('        }'+"\n")
         cf.write('}'+"\n")
         cf.close()
