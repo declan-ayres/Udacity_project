@@ -47,7 +47,8 @@ def create_mnist(input_file, training_data_file_name, training_label_file_name, 
                      print("Skipping decimal = ",decimal_code)
                      continue
 		file_path_list.append("glyphs_output/"+j)
-		classifier_list.append(int(decimal_code))
+		#classifier_list.append(int(decimal_code))
+		classifier_list.append(incl_list.index(decimal_code)+1)
 	training_data_file_name_handle = open(training_data_file_name, 'w')
 	test_data_file_name_handle = open(test_data_file_name, 'w')
         print("Training label file name ",training_label_file_name)
@@ -61,7 +62,8 @@ def create_mnist(input_file, training_data_file_name, training_label_file_name, 
 	test_label_file_name_handle.write(struct.pack('i',2049))
 
 	list_80 = int(.8 * len(file_path_list))
-	list_20 = int(.2 * len(file_path_list))
+	list_20 = len(file_path_list)-list_80
+	
 	training_data_file_name_handle.write(struct.pack('i',list_80))
 	test_data_file_name_handle.write(struct.pack('i',list_20))
 	training_data_file_name_handle.write(struct.pack("i",28))
