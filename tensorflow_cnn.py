@@ -144,10 +144,10 @@ if train:
     print("test accuracy %g"%accuracy.eval(feed_dict={
     x: data_sets.test._images, y_: data_sets.test._labels, keep_prob: 1.0}))
 else:	
-    ckpt = tf.train.get_checkpoint_state('checkpoint.chk')
+    ckpt = tf.train.get_checkpoint_state('temp')
     if ckpt and ckpt.model_checkpoint_path:
          saver.restore(sess, ckpt.model_checkpoint_path)
          #feed x's and get y
          batch_x = data_sets.train.next_batch(5)
-         predictions = sess.run(y_conv, feed_dict={x: batch_x})
+         predictions = sess.run(y_conv, feed_dict={x: batch_x[0], keep_prob:1.0})
          print("predictions = ",predictions)
