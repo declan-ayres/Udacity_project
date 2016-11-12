@@ -11,6 +11,7 @@ import json
 #import config
 import os
 import tensorflow as tf
+from sklearn.externals import joblib
 
 log = logging.getLogger()
 
@@ -21,13 +22,13 @@ parser.add_argument("--test_file")
 parser.add_argument("--train_label")
 parser.add_argument("--test_label")
 parser.add_argument("--config_file")
-parser.add_argument('--train', dest='train', action='store_true')
-parser.add_argument('--no_train', dest='train', action='store_false')
+parser.add_argument('--predict', dest='predict', action='store_true')
+parser.add_argument('--no_predict', dest='predict', action='store_false')
 parser.set_defaults(train=True)
 parser.add_argument("--logging_level",type=int)
 parser.set_defaults(logging_level = logging.INFO)
 args = parser.parse_args()
-train = args.train
+predict = args.predict
 data_dir = args.data_dir
 train_file = args.train_file
 test_file = args.test_file
@@ -60,22 +61,27 @@ labels = []
 
 incl_list = ['97','98','99','120','121','122','61','45','43','47','42','46','48','49','50','51','52','53','54','55','56','57']
 
-batch = data_sets.train.next_batch(50000)
-for i in batch[1]:
-    for j,k in enumerate(i):
-        if k == 1:
-            labels.append(j)
-clf = SVC()
 test_labels = []
 
 for i in data_sets.test._labels:
     for j, k in enumerate(i):
 	if k == 1:
 	    test_labels.append(j)
-clf.fit(batch[0], labels)
-print(clf.score(data_sets.test._images, test_labels))
-print(clf.predict(data_sets.test._images))
-
-
-
+if predict:
+	batch = data_sets.train.next_batch(91308)
+	for i in batch[1]:
+	    for j,k in enumerate(i):
+		if k == 1:
+		    labels.append(j)
+	clf = SVC()
+	clf.fit(batch[0], labels)
+	joblib.dump(clf, 'svm.pkl')
+	print(clf.score(data_sets.test._images, test_labels))
+else:
+	clf = joblib.load('svm.pkl')
+	thelist=clf.predict(data_sets.test._images)
+	values = []
+	for i in thelist:
+	    values.append(incl_list[i])
+	print(values)
 
