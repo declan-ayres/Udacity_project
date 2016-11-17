@@ -8,10 +8,11 @@ import argparse
 import logging
 import sys
 import json
-#import config
 import os
+import numpy as np
 import tensorflow as tf
 from sklearn.externals import joblib
+import matplotlib.pyplot as plt
 
 log = logging.getLogger()
 
@@ -62,7 +63,7 @@ labels = []
 incl_list = ['97','98','99','120','121','122','61','45','43','47','42','46','48','49','50','51','52','53','54','55','56','57']
 
 test_labels = []
-
+ind = np.arange(22)
 for i in data_sets.test._labels:
     for j, k in enumerate(i):
 	if k == 1:
@@ -75,8 +76,14 @@ if predict:
 		    labels.append(j)
 	clf = SVC()
 	clf.fit(batch[0], labels)
+	print("it is", clf.n_support_)
 	joblib.dump(clf, 'svm.pkl')
 	print(clf.score(data_sets.test._images, test_labels))
+	plt.bar(ind, clf.n_support_, .5)
+	plt.ylabel('Number')
+	plt.title('Number of Support Vectors for Each Class')
+	plt.xticks(ind, ('a','b','c','x','y','z','=','-','+','/','*','.','0','1','2','3','4','5','6','7','8','9'))
+	plt.show()
 else:
 	clf = joblib.load('svm.pkl')
 	thelist=clf.predict(data_sets.test._images)

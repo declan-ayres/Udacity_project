@@ -1,3 +1,22 @@
+# Copyright 2015 The TensorFlow Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
+
+
+
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -6,9 +25,9 @@ import argparse
 import logging
 import sys
 import json
-#import config
 import os
 import tensorflow as tf
+import matplotlib.pyplot as plt
 
 log = logging.getLogger()
 
@@ -52,7 +71,6 @@ formatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-
 
 streamhandler.setFormatter(formatter)
 log.addHandler(streamhandler)
-#config.read_config(config_file) # config_file will be a command line argument
 data_sets = input_data.read_data_sets(data_dir, no_classes,fake_data=False, one_hot=False,train_only=False, train_file=train_file, test_file=test_file,train_label=train_label,test_label=test_label)
 
 
@@ -71,11 +89,7 @@ def conv2d(x, W):
 def max_pool_2x2(x):
   return tf.nn.max_pool(x, ksize=[1, 2, 2, 1],
                         strides=[1, 2, 2, 1], padding='SAME')
-#flags = tf.app.flags
-#FLAGS = flags.FLAGS
-#flags.DEFINE_string('data_dir', '/home/ubuntu/tests/', 'Directory for storing data')
 
-#mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
 
 sess = tf.InteractiveSession()
 
@@ -108,6 +122,8 @@ h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
 keep_prob = tf.placeholder(tf.float32)
 h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
+with tf.name_scope('dropout'):
+     tf.scalar_summary('dropout_keep_probability', keep_prob)
 
 W_fc2 = weight_variable([1024, no_classes])
 b_fc2 = bias_variable([no_classes])
@@ -116,33 +132,56 @@ y_conv=tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
 
 # Define loss and optimizer
 y_ = tf.placeholder(tf.float32, [None, no_classes])
-#cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
-#train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 
 
 cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y_conv), reduction_indices=[1]))
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+with tf.name_scope('accuracy'):
+      tf.scalar_summary('accuracy', accuracy)    
 sess.run(tf.initialize_all_variables())
 
-#you will write another function in input_data called next_batch(batch_size)
+with tf.name_scope('cross_entropy'):
+    tf.scalar_summary('cross entropy', cross_entropy)
+merged = tf.merge_all_summaries()
+train_writer = tf.train.SummaryWriter("summaries" + '/train',
+                                        sess.graph)
+test_writer = tf.train.SummaryWriter("summaries" + '/test')
 
 
 saver = tf.train.Saver()
 
 if train:
+    steps = []
+    accuracys = []
     for i in range(3000):
 	batch = data_sets.train.next_batch(50)
 	if i%100 == 0:
-	    saver.save(sess, 'checkpoint.chk')
+	    test_batch = data_sets.test.next_batch(1000)
+  	    summary, acc = sess.run([merged, accuracy], feed_dict={
+            x:test_batch[0], y_: test_batch[1], keep_prob: 1.0})
+            test_writer.add_summary(summary, i)
+	    saver.save(sess, 'temp/checkpoint.chk')
 	    train_accuracy = accuracy.eval(feed_dict={
 	    x:batch[0], y_: batch[1], keep_prob: 1.0})
 	    print("step %d, training accuracy %g"%(i, train_accuracy))
+	    steps.append(i)
+	    accuracys.append(train_accuracy)
 	train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
+	summary, _ = sess.run([merged, train_step],feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5} )
+        train_writer.add_summary(summary, i)
 
     print("test accuracy %g"%accuracy.eval(feed_dict={
     x: data_sets.test._images, y_: data_sets.test._labels, keep_prob: 1.0}))
+    steps.append(3000)
+    accuracys.append(accuracy.eval(feed_dict={
+    x: data_sets.test._images, y_: data_sets.test._labels, keep_prob: 1.0}))
+    plt.plot(steps, accuracys)
+    plt.xlabel("Step")
+    plt.ylabel("Accuracy")
+    plt.suptitle("Tensorflow Convolutional Neural Network Accuracys")
+    plt.show()
 else:	
     ckpt = tf.train.get_checkpoint_state('temp')
     if ckpt and ckpt.model_checkpoint_path:
