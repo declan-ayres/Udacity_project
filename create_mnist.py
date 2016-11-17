@@ -17,25 +17,8 @@ log = logging.getLogger()
 
 def create_mnist(input_file, training_data_file_name, training_label_file_name, test_data_file_name, test_label_file_name):
 	input_file_list = os.listdir(input_file)
-	#input_file_list = the_input_file.readlines()
-	#the_input_file.close()
 	file_path_list = []
 	classifier_list = []
-#	dict_handle = open('current_class_count_ascii_only', 'r')
-#	dict_list = dict_handle.readlines()
-#	dict_with_class_to_ascii_conversion = {}
-#	sum1 = 0
-#	for j in dict_list:
-#                m = re.search('(.*)',str(j))
-#                if m:
-#                   continue
-#		x = j#.replace("(", "").replace(")", "").replace("'", "")
-#		x = x.split("-")
-#		y = x[2].split(".")
-#		print x
-#		sum1 += int(x[2].rstrip('\n'))
-#		dict_with_class_to_ascii_conversion[x[1]] = str(x[0]).strip()
-#	print sum1
         exclude = ['notelementof','sidewaysC','omega','islash','notA','ia','unknown','triangle','right','dc' ,'elementof','funnychr','om','lessthanequalto','noth','plusminus','ge','forwardslash','derivative','delta','lambda']
         incl_list = ['97','98','99','120','121','122','61','45','43','47','42','46','48','49','50','51','52','53','54','55','56','57']
 	for j in input_file_list:
@@ -47,7 +30,6 @@ def create_mnist(input_file, training_data_file_name, training_label_file_name, 
                      print("Skipping decimal = ",decimal_code)
                      continue
 		file_path_list.append("glyphs_output/"+j)
-		#classifier_list.append(int(decimal_code))
 		classifier_list.append(incl_list.index(decimal_code)+1)
 	training_data_file_name_handle = open(training_data_file_name, 'w')
 	test_data_file_name_handle = open(test_data_file_name, 'w')
@@ -181,7 +163,6 @@ if __name__ == '__main__':
        log.setLevel(logging.DEBUG)
 
     filehandler = logging.FileHandler("logging")
-    #formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     formatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
 
     streamhandler.setFormatter(formatter)
