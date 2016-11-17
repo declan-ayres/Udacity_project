@@ -53,7 +53,6 @@ test_label = args.test_label
 conf_f = args.config_file
 
 j = input_data.read_config(conf_f)
-print("it is",j)
 no_classes = j['tensorflow']['no_classes']
 
 

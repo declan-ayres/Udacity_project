@@ -117,13 +117,11 @@ def _read32(bytestream,train_only=True):
     if not train_only:
         return _read_int_4(bytestream) # _read_int_4(bytestream)
     else:
-        print("JERE")
         dt = numpy.dtype(numpy.uint8).newbyteorder('>')
         return numpy.frombuffer(bytestream.read(4), dtype=dt)
 
 def _read_int_4(bytestream):
 	x = struct.unpack('i', bytestream.read(4))[0]
-	print("x=", x)
 	return x
 
 def extract_images(filename,train_only=True):
@@ -150,15 +148,9 @@ def extract_images(filename,train_only=True):
 def dense_to_one_hot(labels_dense, num_classes=10):
     """Convert class labels from scalars to one-hot vectors."""
     num_labels = labels_dense.shape[0]
-    #print ("Num labels in dense to one hot = ",num_labels)
     index_offset = numpy.arange(num_labels) * num_classes
-    #print ("Index offset = ",index_offset)
     labels_one_hot = numpy.zeros((num_labels, num_classes))
     labels_one_hot.flat[(index_offset-1) + labels_dense.ravel()] = 1
-    #for k in labels_one_hot:
-    #    for j in range(k.shape[0]):
-    #        if k[j]==1:
-    #           print ("Label=",j+1)
               
     return labels_one_hot
 
