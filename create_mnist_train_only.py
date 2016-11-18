@@ -22,7 +22,7 @@ def create_mnist(input_file, training_data_file_name):
         exclude = ['notelementof','sidewaysC','omega','islash','notA','ia','unknown','triangle','right','dc' ,'elementof','funnychr','om','lessthanequalto','noth','plusminus','ge','forwardslash','derivative','delta','lambda']
         incl_list = ['97','98','99','120','121','122','61','45','43','47','42','46','48','49','50','51','52','53','54','55','56','57']
 	for j in input_file_list:
-		file_path_list.append("images_output/fast_camera_photo/contours/"+j)
+		file_path_list.append("images_output/*/contours/"+j)
 	training_data_file_name_handle = open(training_data_file_name, 'w')
 	
 	training_data_file_name_handle.write(struct.pack('i',2051))

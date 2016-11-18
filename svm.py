@@ -38,7 +38,6 @@ test_label = args.test_label
 conf_f = args.config_file
 
 j = input_data.read_config(conf_f)
-print("it is",j)
 no_classes = j['tensorflow']['no_classes']
 
 
@@ -68,7 +67,7 @@ for i in data_sets.test._labels:
     for j, k in enumerate(i):
 	if k == 1:
 	    test_labels.append(j)
-if predict:
+if no_predict:
 	batch = data_sets.train.next_batch(91308)
 	for i in batch[1]:
 	    for j,k in enumerate(i):
@@ -76,7 +75,6 @@ if predict:
 		    labels.append(j)
 	clf = SVC()
 	clf.fit(batch[0], labels)
-	print("it is", clf.n_support_)
 	joblib.dump(clf, 'svm.pkl')
 	print(clf.score(data_sets.test._images, test_labels))
 	plt.bar(ind, clf.n_support_, .5)
