@@ -12,11 +12,11 @@ import logging
 
 log = logging.getLogger()
 
-def process_images_and_extract_contours(mypath,root_path):
+def process_images_and_extract_contours(mypath,root_path, input_directory):
     imagelist = []
     imagelist = glob.glob(mypath)
-    if not os.path.exists("images_output"):
-	    images_output= os.makedirs("images_output")
+    if not os.path.exists(input_directory):
+	    images_output= os.makedirs(input_directory)
     for imagefn in imagelist:
 	    fn=os.path.basename(os.path.normpath(imagefn))
 	    img = cv2.imread(imagefn, cv2.CV_8UC1)
@@ -24,16 +24,16 @@ def process_images_and_extract_contours(mypath,root_path):
 		continue
 	    #if dir exists then don't make it else make it
             log.info("Processing image = %s",imagefn)
-	    if not os.path.exists("images_output"+"/"+fn[:-4]):
-		os.makedirs("images_output"+"/"+ fn[:-4])
-		os.makedirs("images_output"+"/"+fn[:-4]+"/"+"contours/")
+	    if not os.path.exists(input_directory+"/"+fn[:-4]):
+		os.makedirs(input_directory+"/"+ fn[:-4])
+		os.makedirs(input_directory+"/"+fn[:-4]+"/"+"contours/")
 
 	    img3,contours,hierarchy = cv2.findContours(img.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 	    cntr =0
 	    tosave = img.copy() 
 	    for contour in contours:
 		a = cv2.contourArea(contour)
-		if a < 500:
+		if a < 1000:
 		    continue
 		x,y,w,h = cv2.boundingRect(contour)
 		#extract the contour from the image
@@ -41,7 +41,7 @@ def process_images_and_extract_contours(mypath,root_path):
 #		letter = ~letter
 		cv2.rectangle(img, (x,y), (x+w, y+h),(0, 255,0), 3)
 		cntr+=1 
-		cfnm = root_path+"/"+"images_output/" + fn[:-4]+ "/contours" + "/"+str(cntr)+'.jpg'
+		cfnm = root_path+"/"+input_directory + "/" + fn[:-4]+ "/contours" + "/"+str(cntr)+'.jpg'
 		
 		cv2.imwrite(cfnm, letter)
 		temp_filename = "tempfile.jpg"
@@ -68,6 +68,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = "path name")
     parser.add_argument("--my_path")
     parser.add_argument("--root_path")
+    parser.add_argument("--input_directory")
     parser.add_argument("--logging_level",type=int)
     parser.set_defaults(root_path = "/home/ubuntu/solver")
     parser.set_defaults(my_path = "/home/ubuntu/solver/images/")
@@ -75,6 +76,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     mypath = args.my_path + "*.jpg"
     root_path = args.root_path
+    input_directory = args.input_directory
     
     streamhandler = logging.StreamHandler(sys.stdout)
     
@@ -90,4 +92,4 @@ if __name__ == '__main__':
 
     streamhandler.setFormatter(formatter)
     log.addHandler(streamhandler)
-    process_images_and_extract_contours(mypath,root_path) 
+    process_images_and_extract_contours(mypath,root_path, input_directory) 

@@ -154,13 +154,13 @@ saver = tf.train.Saver()
 if train:
     steps = []
     accuracys = []
-    for i in range(3000):
+    for i in range(20000):
 	batch = data_sets.train.next_batch(50)
 	if i%100 == 0:
-	    test_batch = data_sets.test.next_batch(1000)
-  	    summary, acc = sess.run([merged, accuracy], feed_dict={
-            x:test_batch[0], y_: test_batch[1], keep_prob: 1.0})
-            test_writer.add_summary(summary, i)
+#	    test_batch = data_sets.test.next_batch(1000)
+#  	    summary, acc = sess.run([merged, accuracy], feed_dict={
+#            x:test_batch[0], y_: test_batch[1], keep_prob: 1.0})
+#            test_writer.add_summary(summary, i)
 	    saver.save(sess, 'temp/checkpoint.chk')
 	    train_accuracy = accuracy.eval(feed_dict={
 	    x:batch[0], y_: batch[1], keep_prob: 1.0})
@@ -176,16 +176,22 @@ if train:
     steps.append(3000)
     accuracys.append(accuracy.eval(feed_dict={
     x: data_sets.test._images, y_: data_sets.test._labels, keep_prob: 1.0}))
-    plt.plot(steps, accuracys)
-    plt.xlabel("Step")
-    plt.ylabel("Accuracy")
-    plt.suptitle("Tensorflow Convolutional Neural Network Accuracys")
-    plt.show()
+    #plt.plot(steps, accuracys)
+    #plt.xlabel("Step")
+    #plt.ylabel("Accuracy")
+    #plt.suptitle("Tensorflow Convolutional Neural Network Accuracys")
+    #plt.show()
 else:	
     ckpt = tf.train.get_checkpoint_state('temp')
     if ckpt and ckpt.model_checkpoint_path:
          saver.restore(sess, ckpt.model_checkpoint_path)
          #feed x's and get y
-         batch_x = data_sets.train.next_batch(5)
+         batch_x = data_sets.train.next_batch(6)
          predictions = sess.run(y_conv, feed_dict={x: batch_x[0], keep_prob:1.0})
-         print("predictions = ",predictions)
+	 incl_list = ['97','98','99','120','121','122','61','45','43','47','42','46','48','49','50','51','52','53','54','55','56','57']
+         indices = predictions.argmax(axis=1)
+ 	 values=[]
+	 for i in indices:
+		values.append(chr(int(incl_list[i])))
+	 print("predictions = ",predictions)
+	 print(values)

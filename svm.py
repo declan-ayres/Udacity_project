@@ -67,7 +67,7 @@ for i in data_sets.test._labels:
     for j, k in enumerate(i):
 	if k == 1:
 	    test_labels.append(j)
-if no_predict:
+if not predict:
 	batch = data_sets.train.next_batch(91308)
 	for i in batch[1]:
 	    for j,k in enumerate(i):
@@ -87,6 +87,6 @@ else:
 	thelist=clf.predict(data_sets.test._images)
 	values = []
 	for i in thelist:
-	    values.append(incl_list[i])
-	print(values)
+	    values.append(chr(int(incl_list[i])))
+        print(values)
 
