@@ -27,18 +27,18 @@ This command will put all the font filenames into the allfonts-paths-from-server
  
 # Predicting
 
-To predict image use my app to take a picture of an equation and send it to the server where the files are. Then run this command:
+To predict image use my app to take a picture of an equation and send it to the server where the files are. I have also provided the sample.jpg and predict.gz for testing which you can use. Then run this command:
 
-python extract_and_print_contours --my_path=pathto/image.jpg --root_path=.
+python extract_and_print_contours --my_path=pathto/sample.jpg --root_path=.
 
 This will create an images_output directory inside of which is the image inside of which is the contours directory which contain the numpy arrays images. 
 
-Now to make the one mnist file from this directory run this program command:
-python create_mnist_train_only.py --input_file=fullpath to/images_output/image_name/contours --training_data_file_name=f.gz
+Now to make the one mnist file from this directory run this program command or you can skip this step and use the predict.gz thats already created:
+python create_mnist_train_only.py --input_file=fullpath to/images_output/sample/contours --training_data_file_name=predict.gz
 
 Now you have the mnist file you can predict with the saved models:
 To predict with cnn algorithm:
-python tensorflow_cnn.py --data_dir=. --train_file=f.gz --test_file=c.gz --train_label=b.gz --test_label=d.gz --config_file=config.tensorflow.json --no_train
+python tensorflow_cnn.py --data_dir=. --train_file=predict.gz --test_file=c.gz --train_label=b.gz --test_label=d.gz --config_file=config.tensorflow.json --no_train
 
 To predict with svm:
-python svm.py --data_dir=. --train_file=a.gz --test_file=f.gz --train_label=b.gz --test_label=d.gz --config_file=config.tensorflow.json --predict
+python svm.py --data_dir=. --train_file=a.gz --test_file=predict.gz --train_label=b.gz --test_label=d.gz --config_file=config.tensorflow.json --predict
