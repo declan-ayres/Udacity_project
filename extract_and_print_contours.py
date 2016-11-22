@@ -12,9 +12,22 @@ import logging
 
 log = logging.getLogger()
 
+#define function to sort the contours from left to right
+def greater_by_x(a, b):
+        x,y,w,h = cv2.boundingRect(a)
+        x1,y1,w1,h1 = cv2.boundingRect(b)
+        if x>x1:
+           #print "returning 1"
+           return 1
+        else:
+           #print "returning 0"
+           return -1
+
+#define the function 
 def process_images_and_extract_contours(mypath,root_path, input_directory):
     imagelist = []
     imagelist = glob.glob(mypath)
+    #Make the directories to put the contours in
     if not os.path.exists(input_directory):
 	    images_output= os.makedirs(input_directory)
     for imagefn in imagelist:
@@ -27,12 +40,15 @@ def process_images_and_extract_contours(mypath,root_path, input_directory):
 	    if not os.path.exists(input_directory+"/"+fn[:-4]):
 		os.makedirs(input_directory+"/"+ fn[:-4])
 		os.makedirs(input_directory+"/"+fn[:-4]+"/"+"contours/")
-
+	    #Find the contours in the image
 	    img3,contours,hierarchy = cv2.findContours(img.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 	    cntr =0
-	    tosave = img.copy() 
+	    tosave = img.copy()
+	    #Sort the contours
+	    contours.sort(greater_by_x) 
 	    for contour in contours:
 		a = cv2.contourArea(contour)
+		#If the contour is too small skip it
 		if a < 1000:
 		    continue
 		x,y,w,h = cv2.boundingRect(contour)
@@ -42,14 +58,14 @@ def process_images_and_extract_contours(mypath,root_path, input_directory):
 		cv2.rectangle(img, (x,y), (x+w, y+h),(0, 255,0), 3)
 		cntr+=1 
 		cfnm = root_path+"/"+input_directory + "/" + fn[:-4]+ "/contours" + "/"+str(cntr)+'.jpg'
-		
+		#Write the contour to the file path
 		cv2.imwrite(cfnm, letter)
 		temp_filename = "tempfile.jpg"
 		Image.open(cfnm).convert('L').save(temp_filename)
 		imsize=28,28 
 		im = Image.open(temp_filename)
 		im1 = im.resize(imsize, Image.ANTIALIAS)
-
+		#Reshape the image and write it
 		imgArr = np.array(im1.getdata(), np.uint8)
 		log.debug(imgArr.shape)
 		with open(cfnm, 'wr+') as f:
@@ -63,7 +79,7 @@ def process_images_and_extract_contours(mypath,root_path, input_directory):
 
 
 
-
+#command line arguments
 if __name__ == '__main__':	
     parser = argparse.ArgumentParser(description = "path name")
     parser.add_argument("--my_path")
