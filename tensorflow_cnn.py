@@ -32,12 +32,12 @@ import matplotlib.pyplot as plt
 log = logging.getLogger()
 #command line arguments
 parser = argparse.ArgumentParser(description = "path name")	
-parser.add_argument("--data_dir")
-parser.add_argument("--train_file")
-parser.add_argument("--test_file")
-parser.add_argument("--train_label")
-parser.add_argument("--test_label")
-parser.add_argument("--config_file")
+parser.add_argument("--data_dir", help="the directory where the files are")
+parser.add_argument("--train_file", help="training data mnist file")
+parser.add_argument("--test_file", help="the test data mnist file")
+parser.add_argument("--train_label", help="training labels mnist file")
+parser.add_argument("--test_label", help="the test label mnist file")
+parser.add_argument("--config_file", help="file with the number of classes")
 parser.add_argument('--train', dest='train', action='store_true')
 parser.add_argument('--no_train', dest='train', action='store_false')
 parser.set_defaults(train=True)
@@ -194,7 +194,7 @@ else:
          predictions = sess.run(y_conv, feed_dict={x: batch_x[0], keep_prob:1.0})
 	 incl_list = ['97','98','99','120','121','122','61','45','43','47','42','46','48','49','50','51','52','53','54','55','56','57']
         #Find the argmax of the probability distribution vectors and convert to the characters 
-	indices = predictions.argmax(axis=1)
+	 indices = predictions.argmax(axis=1)
  	 values=[]
 	 for i in indices:
 		values.append(chr(int(incl_list[i])))
