@@ -78,8 +78,7 @@ if not predict:
 	    for j,k in enumerate(i):
 		if k == 1:
 		    labels.append(j)
-	parameters = {'C':[.1, 10], 'gamma': [.001, .01]} 
-	clf = GridSearchCV(SVC(), parameters)
+	clf = SVC(C=10, gamma=.001)
 	clf.fit(batch[0], labels)
 	joblib.dump(clf, 'svm.pkl')
 	print(clf.score(data_sets.test._images, test_labels))
