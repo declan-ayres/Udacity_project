@@ -40,11 +40,15 @@ parser.add_argument("--test_label", help="the test label mnist file")
 parser.add_argument("--config_file", help="file with the number of classes")
 parser.add_argument('--train', dest='train', action='store_true')
 parser.add_argument('--no_train', dest='train', action='store_false')
+parser.add_argument('--threeconv', dest='threeconv', action='store_true')
+parser.add_argument('--no_threeconv', dest='threeconv', action='store_false')
 parser.set_defaults(train=True)
+parser.set_defaults(no_threeconv=True)
 parser.add_argument("--logging_level",type=int)
 parser.set_defaults(logging_level = logging.INFO)
 args = parser.parse_args()
 train = args.train
+threeconv = args.threeconv
 data_dir = args.data_dir
 train_file = args.train_file
 test_file = args.test_file
@@ -112,12 +116,25 @@ b_conv2 = bias_variable([64])
 
 h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
 h_pool2 = max_pool_2x2(h_conv2)
+
+if threeconv:
+    W_conv3 = weight_variable([5,5,64,92])
+    b_conv3= bias_variable([92])
+
+    h_conv3 = tf.nn.relu(conv2d(h_pool2, W_conv3) + b_conv3)
+    h_pool3 = max_pool_2x2(h_conv3)
 #Make the first fully connected layer
-W_fc1 = weight_variable([7 * 7 * 64, 1024])
-b_fc1 = bias_variable([1024])
+#W_fc1 = weight_variable([7 * 7 * 64, 1024])
+#b_fc1 = bias_variable([1024])
+    W_fc1 = weight_variable([4 * 4 * 92, 1024])
+    b_fc1 = bias_variable([1024])
 
+    h_pool2_flat = tf.reshape(h_pool3, [-1, 4*4*92])
+else:
+    W_fc1 = weight_variable([7 * 7 * 64, 1024])
+    b_fc1 = bias_variable([1024])
+    h_pool2_flat = tf.reshape(h_pool2, [-1, 7*7*64])
 
-h_pool2_flat = tf.reshape(h_pool2, [-1, 7*7*64])
 h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 #Set drop out with probability
 keep_prob = tf.placeholder(tf.float32)
@@ -166,11 +183,11 @@ if train:
 	    saver.save(sess, 'temp/checkpoint.chk')
 	    #Evaluate training accuracy every 100 steps
 	    train_accuracy = accuracy.eval(feed_dict={
-	    x:batch[0], y_: batch[1], keep_prob: 1.0})
+	    x:batch[0], y_: batch[1], keep_prob: 1})
 	    print("step %d, training accuracy %g"%(i, train_accuracy))
 	    steps.append(i)
 	    accuracys.append(train_accuracy)
-	train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
+	train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob:.5})
 	summary, _ = sess.run([merged, train_step],feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5} )
         train_writer.add_summary(summary, i)
     #Evaluate the test accuracy
