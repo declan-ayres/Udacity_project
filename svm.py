@@ -78,15 +78,15 @@ if not predict:
 	    for j,k in enumerate(i):
 		if k == 1:
 		    labels.append(j)
-	clf = SVC(C=10, gamma=.001)
+	clf = SVC(C=100, gamma=.1)
 	clf.fit(batch[0], labels)
 	joblib.dump(clf, 'svm.pkl')
 	print(clf.score(data_sets.test._images, test_labels))
-	plt.bar(ind, clf.n_support_, .5)
-	plt.ylabel('Number')
-	plt.title('Number of Support Vectors for Each Class')
-	plt.xticks(ind, ('a','b','c','x','y','z','=','-','+','/','*','.','0','1','2','3','4','5','6','7','8','9'))
-	plt.show()
+#	plt.bar(ind, clf.n_support_, .5)
+#	plt.ylabel('Number')
+#	plt.title('Number of Support Vectors for Each Class')
+#	plt.xticks(ind, ('a','b','c','x','y','z','=','-','+','/','*','.','0','1','2','3','4','5','6','7','8','9'))
+#	plt.show()
 else:
 	#load the saved model
 	clf = joblib.load('svm.pkl')
