@@ -64,9 +64,9 @@ test_labels=[]
 train_labels=[]
 #define function to convert onehot arrays to indices vector
 def onehot_to_label(vector):
-   """Converts list of onehot arrays to array of indices
-   Example: [[0,1,0,0],[1,0,0,0], [0,0,0,1]] --> [1,0,3]
-   """
+    """Converts list of onehot arrays to array of indices
+    Example: [[0,1,0,0],[1,0,0,0], [0,0,0,1]] --> [1,0,3]
+    """
     labels=[]
     for i in vector:
         for j, k in enumerate(i):
