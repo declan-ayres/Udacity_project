@@ -14,6 +14,7 @@ import tensorflow as tf
 from sklearn.externals import joblib
 import matplotlib.pyplot as plt
 from sklearn.model_selection import GridSearchCV
+import knn_benchmark
 
 log = logging.getLogger()
 #command line arguments
@@ -67,10 +68,11 @@ incl_list = ['97','98','99','120','121','122','61','45','43','47','42','46','48'
 test_labels = []
 ind = np.arange(22)
 #convert the onehot arrays to indices array
-for i in data_sets.test._labels:
-    for j, k in enumerate(i):
-	if k == 1:
-	    test_labels.append(j)
+test_labels = knn_benchmark.onehot_to_label(data_sets.test._labels)
+#for i in data_sets.test._labels:
+ #   for j, k in enumerate(i):
+#	if k == 1:
+#	    test_labels.append(j)
 #train the svm
 if not predict:
 	batch = data_sets.train.next_batch(91308)
