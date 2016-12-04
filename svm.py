@@ -60,7 +60,6 @@ log.addHandler(streamhandler)
 
 #read the data sets from the mnist files
 data_sets = input_data.read_data_sets(data_dir, no_classes,fake_data=False, one_hot=False,train_only=False, train_file=train_file, test_file=test_file,train_label=train_label,test_label=test_label)
-labels = []
 
 #the list of the classes in unicode ascii
 incl_list = ['97','98','99','120','121','122','61','45','43','47','42','46','48','49','50','51','52','53','54','55','56','57']
