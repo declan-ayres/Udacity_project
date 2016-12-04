@@ -65,14 +65,9 @@ labels = []
 #the list of the classes in unicode ascii
 incl_list = ['97','98','99','120','121','122','61','45','43','47','42','46','48','49','50','51','52','53','54','55','56','57']
 
-test_labels = []
 ind = np.arange(22)
 #convert the onehot arrays to indices array
 test_labels = knn_benchmark.onehot_to_label(data_sets.test._labels)
-#for i in data_sets.test._labels:
- #   for j, k in enumerate(i):
-#	if k == 1:
-#	    test_labels.append(j)
 #train the svm
 if not predict:
 	batch = data_sets.train.next_batch(91308)
