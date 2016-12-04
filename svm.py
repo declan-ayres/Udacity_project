@@ -71,10 +71,11 @@ test_labels = knn_benchmark.onehot_to_label(data_sets.test._labels)
 #train the svm
 if not predict:
 	batch = data_sets.train.next_batch(91308)
-	for i in batch[1]:
-	    for j,k in enumerate(i):
-		if k == 1:
-		    labels.append(j)
+	labels = knn_benchmark.onehot_to_label(batch[1])
+	#for i in batch[1]:
+	 #   for j,k in enumerate(i):
+	#	if k == 1:
+	#	    labels.append(j)
 	clf = SVC(C=100, gamma=.1)
 	clf.fit(batch[0], labels)
 	joblib.dump(clf, 'svm.pkl')
