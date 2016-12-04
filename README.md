@@ -17,7 +17,7 @@ This command will put all the font filenames into the allfonts-paths-from-server
  
  To run the cnn algorithm type this:
  
- python tensorflow_cnn.py --data_dir=. --train_file=a.gz --test_file=c.gz --train_label=b.gz --test_label=d.gz --config_file=config.tensorflow.json --train
+ python tensorflow_cnn.py --data_dir=. --train_file=a.gz --test_file=c.gz --train_label=b.gz --test_label=d.gz --config_file=config.tensorflow.json --train --no_threeconv
  
  To run the svm algorithm: 
  python svm.py --data_dir=. --train_file=a.gz --test_file=c.gz --train_label=b.gz --test_label=d.gz --config_file=config.tensorflow.json --no_predict
