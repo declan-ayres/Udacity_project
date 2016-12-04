@@ -71,7 +71,6 @@ test_labels = knn_benchmark.onehot_to_label(data_sets.test._labels)
 if not predict:
 	batch = data_sets.train.next_batch(91308)
 	labels = knn_benchmark.onehot_to_label(batch[1])
-	#for i in batch[1]:
 	 #   for j,k in enumerate(i):
 	#	if k == 1:
 	#	    labels.append(j)
