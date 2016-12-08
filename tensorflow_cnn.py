@@ -124,8 +124,6 @@ if threeconv:
     h_conv3 = tf.nn.relu(conv2d(h_pool2, W_conv3) + b_conv3)
     h_pool3 = max_pool_2x2(h_conv3)
 #Make the first fully connected layer
-#W_fc1 = weight_variable([7 * 7 * 64, 1024])
-#b_fc1 = bias_variable([1024])
     W_fc1 = weight_variable([4 * 4 * 92, 1024])
     b_fc1 = bias_variable([1024])
 
