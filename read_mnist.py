@@ -34,18 +34,17 @@ def read_mnist_file(input_file, file_size):
 	n = 0 
 	for i in range(no_labels):
 	       n+=1
-	       #print(sys.getsizeof(struct.unpack('i',the_input_file.read(4))[0]))
+	 
  	       #input_file_list.append(struct.unpack('i',the_input_file.read(4))[0])#, input_file_list))
  	       c = struct.unpack('i',the_input_file.read(4))[0]#, input_file_list))
-	       #print(unichr(input_file_list[i]))
+	       
                if c <128:
 	          print(c,unichr(c).encode('utf-8'))
                else:
                   print(c)
         
         #input_file_list = the_input_file.read(struct.unpack(unpack_read_string, input_file_list))
-        #for i in input_file_list:
-        #      print str(i)+"\n"
+       
 	print n
         the_input_file.close()
 
