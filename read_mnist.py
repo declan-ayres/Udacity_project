@@ -73,7 +73,7 @@ if __name__ == '__main__':
        log.setLevel(logging.DEBUG)
 
     filehandler = logging.FileHandler("logging")
-    #formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+   
     formatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
 
     streamhandler.setFormatter(formatter)
